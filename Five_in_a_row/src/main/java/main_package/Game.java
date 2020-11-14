@@ -70,8 +70,115 @@ public class Game {
         }
     }
     
-    // TODO: Implement
-    public Boolean hasWon(int markCountToWin) {
+    public Boolean hasWon(int markCountToWin, Player player) {
+        int playerMarkCount = 0;
+        int playerMarkNumber = player == Player.X ? 1 : 2;
+        
+        // Vertical check
+        for (int row = 0; row < this.board.length; row++){
+            playerMarkCount = 0;
+            for (int col = 0; col < this.board[row].length; col++) {
+                if (this.board[row][col] == playerMarkNumber) {
+                    playerMarkCount++;
+                    if (playerMarkCount == markCountToWin) {
+                        return true;
+                    }
+                } else {
+                    playerMarkCount = 0;
+                }
+            }
+        }
+        
+        // Horizontal check
+        for (int col = 0; col < this.board[0].length; col++) {
+            playerMarkCount = 0;
+            for (int row = 0; row < this.board.length; row++) {
+                if (this.board[row][col] == playerMarkNumber) {
+                    playerMarkCount++;
+                    if (playerMarkCount == markCountToWin) {
+                        return true;
+                    }
+                } else {
+                    playerMarkCount = 0;
+                }
+            }
+        }
+
+        // Diagonal checks
+        // A1 --> Z99
+        for (int j = 0; j < this.board[0].length; j++) {
+            int iHelper = 0;
+            playerMarkCount = 0;
+            // half triangle
+            for (int i = j; i < this.board.length - j; i++) {
+                if (this.board[i][iHelper] == playerMarkNumber) {
+                    playerMarkCount++;
+                    if (playerMarkCount == markCountToWin) {
+                        return true;
+                    }
+                }
+                if (iHelper < this.board[0].length - 1) {
+                    iHelper++;
+                } else {
+                    break;
+                }
+            }
+
+            // other half
+            iHelper = j;
+            playerMarkCount = 0;
+            for (int i = 0; i < this.board.length - iHelper; i++) {
+                if (this.board[i][iHelper] == playerMarkNumber) {
+                    playerMarkCount++;
+                    if (playerMarkCount == markCountToWin) {
+                        return true;
+                    }
+                }
+                if (iHelper < this.board[0].length - 1) {
+                    iHelper++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        // Z1 --> A99
+        for (int j = 0; j < this.board[0].length; j++) {
+            int iHelper = 0;
+            playerMarkCount = 0;
+            // half triangle
+            for (int i = this.board.length - 1 - j; i > j; i--) {
+                if (this.board[i][iHelper] == playerMarkNumber) {
+                    playerMarkCount++;
+                    if (playerMarkCount == markCountToWin) {
+                        return true;
+                    }
+                }
+                if (iHelper < this.board[0].length - 1) {
+                    iHelper++;
+                } else {
+                    break;
+                }
+            }
+
+            // other half
+            iHelper = j;
+            playerMarkCount = 0;
+            for (int i = this.board.length - 1; i > 0; i--) {
+                if (this.board[i][iHelper] == playerMarkNumber) {
+                    playerMarkCount++;
+                    if (playerMarkCount == markCountToWin) {
+                        return true;
+                    }
+                }
+                if (iHelper < this.board[0].length - 1) {
+                    iHelper++;
+                } else {
+                    break;
+                }
+            }
+        }
+
         return false;
     }
     
@@ -87,27 +194,30 @@ public class Game {
     }
     
     public void printBoard() {
-        char[] abc = {' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-        String output = "";
+        char[] abc = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+        String output = "   ";
+        
+        for (int col = 0; col < this.board[0].length; col++){
+            if (col < 9) {
+                output += (col + 1) + "  ";
+            } else {
+                output += (col + 1) + " ";
+            }
+        }
+        output += "\n";
         for (int row = 0; row < this.board.length; row++) {
             output += abc[row] + "  ";
             for (int col = 0; col < this.board[row].length; col++) {
-                if (row == 0 && col < 9) {
-                    output += (col + 1) + "  ";
-                } else if (row == 0 && col >= 9){
-                    output += (col + 1) + " ";
-                } else {
-                    switch (this.board[row][col]) {
-                        case 1:
-                            output += "X  ";
-                            break;
-                        case 2:
-                            output += "O  ";
-                            break;
-                        default:
-                            output += ".  ";
-                            break;
-                    }
+                switch (this.board[row][col]) {
+                    case 1:
+                        output += "X  ";
+                        break;
+                    case 2:
+                        output += "O  ";
+                        break;
+                    default:
+                        output += ".  ";
+                        break;
                 }
             }
             output += "\n";

@@ -30,6 +30,8 @@ public class App {
             } else {
                 System.out.println("The given coords are valid: " + moveCoords[0] + ", " + moveCoords[1]);
                 game.mark(moveCoords, player);
+                Boolean victory = game.hasWon(3, player);
+                System.out.println(victory);
                 player = player == Player.X ? Player.O : Player.X;
             }
         }
