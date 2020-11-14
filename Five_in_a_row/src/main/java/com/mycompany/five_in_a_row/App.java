@@ -22,16 +22,20 @@ public class App {
         Player player = Player.X;
         
         while (gameIsInProgress) {
+            System.out.println("The next player: " + player.toString());
             game.printBoard();
             int[] moveCoords = game.getMove();
             if (moveCoords == null) {
                 gameIsInProgress = false;
                 System.out.println("Quiting game! Have a nice day!");
             } else {
-                System.out.println("The given coords are valid: " + moveCoords[0] + ", " + moveCoords[1]);
                 game.mark(moveCoords, player);
-                Boolean victory = game.hasWon(3, player);
-                System.out.println(victory);
+                Boolean victory = game.hasWon(5, player, moveCoords);
+                if (victory) {
+                    game.printBoard();
+                    System.out.println(player.toString() + " has won the game!");
+                    gameIsInProgress = false;
+                }
                 player = player == Player.X ? Player.O : Player.X;
             }
         }

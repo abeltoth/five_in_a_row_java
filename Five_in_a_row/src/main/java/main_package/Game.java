@@ -70,112 +70,115 @@ public class Game {
         }
     }
     
-    public Boolean hasWon(int markCountToWin, Player player) {
-        int playerMarkCount = 0;
+    public Boolean hasWon(int markCountToWin, Player player, int[] lastMarkCoords) {
+        int playerMarkCount;
         int playerMarkNumber = player == Player.X ? 1 : 2;
-        
-        // Vertical check
-        for (int row = 0; row < this.board.length; row++){
-            playerMarkCount = 0;
-            for (int col = 0; col < this.board[row].length; col++) {
-                if (this.board[row][col] == playerMarkNumber) {
-                    playerMarkCount++;
-                    if (playerMarkCount == markCountToWin) {
-                        return true;
-                    }
-                } else {
-                    playerMarkCount = 0;
+
+        // up - down
+        playerMarkCount = 0;
+        for (int i = 0; i < markCountToWin; i++) {
+            if (lastMarkCoords[0] >= markCountToWin - 1 &&
+                this.board[lastMarkCoords[0] - i][lastMarkCoords[1]] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
                 }
-            }
-        }
-        
-        // Horizontal check
-        for (int col = 0; col < this.board[0].length; col++) {
-            playerMarkCount = 0;
-            for (int row = 0; row < this.board.length; row++) {
-                if (this.board[row][col] == playerMarkNumber) {
-                    playerMarkCount++;
-                    if (playerMarkCount == markCountToWin) {
-                        return true;
-                    }
-                } else {
-                    playerMarkCount = 0;
-                }
+            } else {
+                break;
             }
         }
 
-        // Diagonal checks
-        // A1 --> Z99
-        for (int j = 0; j < this.board[0].length; j++) {
-            int iHelper = 0;
-            playerMarkCount = 0;
-            // half triangle
-            for (int i = j; i < this.board.length - j; i++) {
-                if (this.board[i][iHelper] == playerMarkNumber) {
-                    playerMarkCount++;
-                    if (playerMarkCount == markCountToWin) {
-                        return true;
-                    }
+        for (int i = 1; i < markCountToWin; i++) {
+            if (lastMarkCoords[0] <= this.board.length - markCountToWin -1 &&
+                this.board[lastMarkCoords[0] + i][lastMarkCoords[1]] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
                 }
-                if (iHelper < this.board[0].length - 1) {
-                    iHelper++;
-                } else {
-                    break;
-                }
-            }
-
-            // other half
-            iHelper = j;
-            playerMarkCount = 0;
-            for (int i = 0; i < this.board.length - iHelper; i++) {
-                if (this.board[i][iHelper] == playerMarkNumber) {
-                    playerMarkCount++;
-                    if (playerMarkCount == markCountToWin) {
-                        return true;
-                    }
-                }
-                if (iHelper < this.board[0].length - 1) {
-                    iHelper++;
-                } else {
-                    break;
-                }
+            } else {
+                break;
             }
         }
 
-        // Z1 --> A99
-        for (int j = 0; j < this.board[0].length; j++) {
-            int iHelper = 0;
-            playerMarkCount = 0;
-            // half triangle
-            for (int i = this.board.length - 1 - j; i > j; i--) {
-                if (this.board[i][iHelper] == playerMarkNumber) {
-                    playerMarkCount++;
-                    if (playerMarkCount == markCountToWin) {
-                        return true;
-                    }
+        // left - right
+        playerMarkCount = 0;
+        for (int i = 0; i < markCountToWin; i++) {
+            if (lastMarkCoords[1] >= markCountToWin -1 &&
+                this.board[lastMarkCoords[0]][lastMarkCoords[1] - i] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
                 }
-                if (iHelper < this.board[0].length - 1) {
-                    iHelper++;
-                } else {
-                    break;
-                }
+            } else {
+                break;
             }
+        }
 
-            // other half
-            iHelper = j;
-            playerMarkCount = 0;
-            for (int i = this.board.length - 1; i > 0; i--) {
-                if (this.board[i][iHelper] == playerMarkNumber) {
-                    playerMarkCount++;
-                    if (playerMarkCount == markCountToWin) {
-                        return true;
-                    }
+        for (int i = 1; i < markCountToWin; i++) {
+            if (lastMarkCoords[1] <= this.board[0].length - markCountToWin -1 &&
+                this.board[lastMarkCoords[0]][lastMarkCoords[1] + i] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
                 }
-                if (iHelper < this.board[0].length - 1) {
-                    iHelper++;
-                } else {
-                    break;
+            } else {
+                break;
+            }
+        }
+
+        // downLeft - upRight
+        playerMarkCount = 0;
+        for (int i = 0; i < markCountToWin; i++) {
+            if (lastMarkCoords[0] <= this.board.length &&
+                lastMarkCoords[1] >= markCountToWin - 1 &&
+                this.board[lastMarkCoords[0] + i][lastMarkCoords[1] - i] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
                 }
+            } else {
+                break;
+            }
+        }
+
+        for (int i = 1; i < markCountToWin; i++) {
+            if (lastMarkCoords[0] >= markCountToWin - 1 &&
+                lastMarkCoords[1] <= this.board[0].length &&
+                this.board[lastMarkCoords[0] - i][lastMarkCoords[1] + i] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
+                }
+            } else {
+                break;
+            }
+        }
+
+        // upLeft - downRight
+        playerMarkCount = 0;
+        for (int i = 0; i < markCountToWin; i++) {
+            if (lastMarkCoords[0] >= markCountToWin - 1 &&
+                lastMarkCoords[1] >= markCountToWin - 1 &&
+                this.board[lastMarkCoords[0] - i][lastMarkCoords[1] - i] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
+                }
+            } else {
+                break;
+            }
+        }
+
+        for (int i = 1; i < markCountToWin; i++) {
+            if (lastMarkCoords[0] <= this.board.length - markCountToWin - 1 &&
+                lastMarkCoords[1] <= this.board[0].length &&
+                this.board[lastMarkCoords[0] + i][lastMarkCoords[1] + i] == playerMarkNumber) {
+                playerMarkCount++;
+                if (playerMarkCount == markCountToWin) {
+                    return true;
+                }
+            } else {
+                break;
             }
         }
 
